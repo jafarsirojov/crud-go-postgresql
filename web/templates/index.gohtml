@@ -18,11 +18,10 @@
 {{/* CREATE, READ, UPDATE, DELETE */}}
 
 {{/* form>input+button */}}
-<form action="/" method="POST">
+<form action="/burgers/save" method="POST">
     <input type="hidden" name="action" value="save">
     <input type="text" name="name">
     <input type="number" name="price">
-    <textarea name="description"></textarea>
     <button>Ok</button>
 </form>
 
@@ -31,11 +30,16 @@
     {{range $index, $val := .Burgers}}
     <li>
         {{$index}} {{$val}}
-        <form action="/" method="POST">
+        <form action="/burgers/remove" method="POST">
             <input type="hidden" name="action" value="remove">
             <input type="hidden" name="id" value="{{$val.Id}}">
             <button>Remove</button>
         </form>
+
+{{/*        <form action="/burgers/remove" >*/}}
+{{/*            <p><input type="hidden" value="{{$val.Id}}" name="id">*/}}
+{{/*            <p><input type="submit"></p>*/}}
+{{/*        </form>*/}}
     </li>
     {{end}}
 </ul>

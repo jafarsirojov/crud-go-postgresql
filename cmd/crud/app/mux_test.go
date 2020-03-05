@@ -13,14 +13,6 @@ func Test_emptySearchInMap(t *testing.T) {
 	}
 }
 
-func Test_addToEmptyMap(t *testing.T) {
-	var m map[string] string
-	m["key"] = "value"
-	if _, ok := m["key"]; !ok {
-		t.Errorf("not found")
-	}
-}
-
 func Test_calculateWeight(t *testing.T) {
 	tests := []struct {
 		name string

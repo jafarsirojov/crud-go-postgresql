@@ -9,9 +9,14 @@ func (receiver *server) InitRoutes() {
 
 	// стандартный mux:
 	// - если адрес начинается со "/" - то под действие обработчика попадает всё, что начинается со "/"
+	// https://dropmefiles.com/k0P8d
 	mux.GET("/", receiver.handleBurgersList())
-	// mux.POST("/", receiver.handleBurgersSave())
-	// mux.POST("/", receiver.handleBurgersRemove())
+	mux.POST("/", receiver.handleBurgersList())
+
+	//mux.POST("/burgers/save", receiver.handleBurgersSave())
+	//mux.POST("/burgers/remove", receiver.handleBurgersRemove())
 	// - но если есть более "специфичный", то используется он
 	mux.GET("/favicon.ico", receiver.handleFavicon())
+	mux.POST("/burgers/remove",receiver.handleBurgersRemove())
+	mux.POST("/burgers/save",receiver.handleBurgersSave())
 }
