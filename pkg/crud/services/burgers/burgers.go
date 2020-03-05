@@ -20,8 +20,17 @@ func NewBurgersSvc(pool *pgxpool.Pool) *BurgersSvc {
 }
 
 func (service *BurgersSvc) BurgersList() (list []models.Burger, err error) {
-	list = make([]models.Burger, 0)
 	conn, err := service.pool.Acquire(context.Background())
+	if err != nil {
+		return nil, errorses.DbErrors(err)
+	}
+	defer conn.Release()
+	_, err = conn.Exec(context.Background(), createTableDDL)
+	if err != nil {
+		return nil, errorses.QueryErrors(createTableDDL, err)
+	}
+	list = make([]models.Burger, 0)
+	conn, err = service.pool.Acquire(context.Background())
 	if err != nil {
 		return nil, errorses.DbErrors(err)
 	}
