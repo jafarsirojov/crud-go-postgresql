@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"path/filepath"
 )
 
@@ -20,10 +21,23 @@ var (
 
 func main() {
 	flag.Parse()
-	addr := net.JoinHostPort(*host, *port)
+	Port, ok := os.LookupEnv("PORT")
+	if !ok{
+		Port = *port
+	}
+	Dsn, ok := os.LookupEnv("DATABASE_URL")
+	if !ok{
+		Dsn = *dsn
+	}
+	Host, ok := os.LookupEnv("HOST")
+	if !ok{
+		Host = *host
+	}
+
+	addr := net.JoinHostPort(Host,Port)
 	log.Println("starting server!")
-	log.Printf("host = %s, port = %s\n",*host,*port)
-	start(addr, *dsn)
+	log.Printf("host = %s, port = %s\n",Host,Port)
+	start(addr, Dsn)
 }
 
 func start(addr string, dsn string) {
