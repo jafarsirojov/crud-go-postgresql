@@ -19,25 +19,29 @@ var (
 	dsn  = flag.String("dsn", "postgres://app:pass@localhost:5432/app", "Postgres DSN")
 )
 
+const ENV_PORT = "PORT"
+const ENV_DSN = "DATABASE_URL"
+const ENV_HOST = "HOST"
+
 func main() {
 	flag.Parse()
-	Port, ok := os.LookupEnv("PORT")
-	if !ok{
-		Port = *port
+	envPort, ok := os.LookupEnv(ENV_PORT)
+	if !ok {
+		envPort = *port
 	}
-	Dsn, ok := os.LookupEnv("DATABASE_URL")
-	if !ok{
-		Dsn = *dsn
+	envDsn, ok := os.LookupEnv(ENV_DSN)
+	if !ok {
+		envDsn = *dsn
 	}
-	Host, ok := os.LookupEnv("HOST")
-	if !ok{
-		Host = *host
+	envHost, ok := os.LookupEnv(ENV_HOST)
+	if !ok {
+		envHost = *host
 	}
 
-	addr := net.JoinHostPort(Host,Port)
+	addr := net.JoinHostPort(envHost, envPort)
 	log.Println("starting server!")
-	log.Printf("host = %s, port = %s\n",Host,Port)
-	start(addr, Dsn)
+	log.Printf("host = %s, port = %s\n", envHost, envPort)
+	start(addr, envDsn)
 }
 
 func start(addr string, dsn string) {

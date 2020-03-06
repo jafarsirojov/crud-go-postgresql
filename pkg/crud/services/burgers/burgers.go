@@ -2,7 +2,7 @@ package burgers
 
 import (
 	"context"
-	"crud/pkg/crud/errorses"
+	"crud/pkg/crud/crudErrors"
 	"crud/pkg/crud/models"
 	"errors"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -22,22 +22,22 @@ func NewBurgersSvc(pool *pgxpool.Pool) *BurgersSvc {
 func (service *BurgersSvc) BurgersList() (list []models.Burger, err error) {
 	conn, err := service.pool.Acquire(context.Background())
 	if err != nil {
-		return nil, errorses.DbErrors(err)
+		return nil, crudErrors.NewDbError(err)
 	}
 	defer conn.Release()
 	_, err = conn.Exec(context.Background(), createTableDDL)
 	if err != nil {
-		return nil, errorses.QueryErrors(createTableDDL, err)
+		return nil, crudErrors.NewQueryError(createTableDDL, err)
 	}
 	list = make([]models.Burger, 0)
 	conn, err = service.pool.Acquire(context.Background())
 	if err != nil {
-		return nil, errorses.DbErrors(err)
+		return nil, crudErrors.NewDbError(err)
 	}
 	defer conn.Release()
 	rows, err := conn.Query(context.Background(), selectAllBurgersRemovedFalse)
 	if err != nil {
-		return nil, errorses.QueryErrors(selectAllBurgersRemovedFalse, err)
+		return nil, crudErrors.NewQueryError(selectAllBurgersRemovedFalse, err)
 	}
 	defer rows.Close()
 
@@ -45,13 +45,13 @@ func (service *BurgersSvc) BurgersList() (list []models.Burger, err error) {
 		item := models.Burger{}
 		err := rows.Scan(&item.Id, &item.Name, &item.Price)
 		if err != nil {
-			return nil, errorses.DbErrors(err)
+			return nil, crudErrors.NewDbError(err)
 		}
 		list = append(list, item)
 	}
 	err = rows.Err()
 	if err != nil {
-		return nil, errorses.DbErrors(err)
+		return nil, crudErrors.NewDbError(err)
 	}
 
 	return list, nil
@@ -60,20 +60,20 @@ func (service *BurgersSvc) BurgersList() (list []models.Burger, err error) {
 func (service *BurgersSvc) Save(model models.Burger) (err error) {
 	conn, err := service.pool.Acquire(context.Background())
 	if err != nil {
-		return errorses.DbErrors(err)
+		return crudErrors.NewDbError(err)
 	}
 	defer conn.Release()
 	if model.Name == "" {
-		return errorses.ModelErrors("name= not found", err)
+		return crudErrors.NewModelError("name= not found", err)
 	}
 	name := model.Name
 	if model.Price <= 0 {
-		return errorses.ModelErrors("value= is not more than zero", err)
+		return crudErrors.NewModelError("value= is not more than zero", err)
 	}
 	price := model.Price
 	_, err = conn.Exec(context.Background(), insertAddBurger, name, price)
 	if err != nil {
-		return errorses.QueryErrors(insertAddBurger, err)
+		return crudErrors.NewQueryError(insertAddBurger, err)
 	}
 	return nil
 }
@@ -81,12 +81,12 @@ func (service *BurgersSvc) Save(model models.Burger) (err error) {
 func (service *BurgersSvc) RemoveById(id int) (err error) {
 	conn, err := service.pool.Acquire(context.Background())
 	if err != nil {
-		return errorses.DbErrors(err)
+		return crudErrors.NewDbError(err)
 	}
 	defer conn.Release()
 	_, err = conn.Exec(context.Background(), updateDeleteBurgerID, id)
 	if err != nil {
-		return errorses.QueryErrors(updateDeleteBurgerID, err)
+		return crudErrors.NewQueryError(updateDeleteBurgerID, err)
 	}
 	return nil
 }

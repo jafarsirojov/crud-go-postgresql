@@ -1,7 +1,7 @@
 package models
 
 type Burger struct {
-	Id int64
+	Id int
 	Name string
 	Price int
 	Removed bool

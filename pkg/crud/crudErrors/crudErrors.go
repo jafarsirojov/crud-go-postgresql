@@ -1,4 +1,4 @@
-package errorses
+package crudErrors
 
 import "fmt"
 
@@ -40,14 +40,14 @@ func (receiver *ModelError) Error() string {
 	return fmt.Sprintf("can't execute query %s: %s", receiver.Value, receiver.Err.Error())
 }
 
-func QueryErrors(query string, err error) *QueryError {
+func NewQueryError(query string, err error) *QueryError {
 	return &QueryError{Query: query, Err: err}
 }
 
-func ModelErrors(value string, err error) *ModelError {
+func NewModelError(value string, err error) *ModelError {
 	return &ModelError{Value: value, Err: err}
 }
 
-func DbErrors(err error) *DbError {
+func NewDbError(err error) *DbError {
 	return &DbError{Err: err}
 }
