@@ -13,11 +13,11 @@ import (
 	"path/filepath"
 )
 
-var (
-	host = flag.String("host", "0.0.0.0", "Server host")
-	port = flag.String("port", "9999", "Server port")
-	dsn  = flag.String("dsn", "postgres://app:pass@localhost:5432/app", "Postgres DSN")
-)
+//var (
+//	host = flag.String("host", "0.0.0.0", "Server host")
+//	port = flag.String("port", "9999", "Server port")
+//	dsn  = flag.String("dsn", "postgres://app:pass@localhost:5432/app", "Postgres DSN")
+//)
 
 const ENV_PORT = "PORT"
 const ENV_DSN = "DATABASE_URL"
