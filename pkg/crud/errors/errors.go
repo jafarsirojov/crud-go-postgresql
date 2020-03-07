@@ -1,4 +1,4 @@
-package crudErrors
+package errors
 
 import "fmt"
 

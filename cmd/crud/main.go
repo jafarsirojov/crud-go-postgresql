@@ -25,21 +25,30 @@ const ENV_HOST = "HOST"
 
 func main() {
 	flag.Parse()
-	envPort := newEnv(ENV_PORT, *port)
-	envDsn := newEnv(ENV_DSN, *dsn)
-	envHost := newEnv(ENV_HOST, *host)
+	envPort, ok := FromFlagOrEnv(*port, ENV_PORT)
+	if !ok {
+		log.Println("can't port")
+	}
+	envDsn, ok := FromFlagOrEnv(*dsn, ENV_DSN)
+	if !ok {
+		log.Println("can't port")
+	}
+	envHost, ok := FromFlagOrEnv(*host, ENV_HOST)
+	if !ok {
+		log.Println("can't port")
+	}
 	addr := net.JoinHostPort(envHost, envPort)
 	log.Println("starting server!")
 	log.Printf("host = %s, port = %s\n", envHost, envPort)
 	start(addr, envDsn)
 }
 
-func newEnv(env string, flag string) (newEnv string){
-	newEnv, ok := os.LookupEnv(env)
-	if !ok {
-		newEnv = flag
+func FromFlagOrEnv(flag string, env string) (value string, ok bool) {
+	if flag != "" {
+		return flag, true
 	}
-	return
+
+	return os.LookupEnv(env)
 }
 
 func start(addr string, dsn string) {
