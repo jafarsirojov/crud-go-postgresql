@@ -36,12 +36,12 @@ func main() {
 	}
 	envDsn, ok := FromFlagOrEnv(*dsn, ENV_DSN)
 	if !ok {
-		log.Println("can't port")
+		log.Println("can't dsn")
 		return
 	}
 	envHost, ok := FromFlagOrEnv(*host, ENV_HOST)
 	if !ok {
-		log.Println("can't port")
+		log.Println("can't host")
 		return
 	}
 	addr := net.JoinHostPort(envHost, envPort)
