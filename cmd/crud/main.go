@@ -12,13 +12,17 @@ import (
 	"os"
 	"path/filepath"
 )
-
 //var (
 //	host = flag.String("host", "0.0.0.0", "Server host")
 //	port = flag.String("port", "9999", "Server port")
 //	dsn  = flag.String("dsn", "postgres://app:pass@localhost:5432/app", "Postgres DSN")
 //)
-
+var (
+	host = flag.String("host", "", "Server host")
+	port = flag.String("port", "", "Server port")
+	dsn  = flag.String("dsn", "", "Postgres DSN")
+)
+//-host 0.0.0.0 -port 9999 -dsn postgres://app:pass@localhost:5432/app
 const ENV_PORT = "PORT"
 const ENV_DSN = "DATABASE_URL"
 const ENV_HOST = "HOST"
@@ -28,14 +32,17 @@ func main() {
 	envPort, ok := FromFlagOrEnv(*port, ENV_PORT)
 	if !ok {
 		log.Println("can't port")
+		return
 	}
 	envDsn, ok := FromFlagOrEnv(*dsn, ENV_DSN)
 	if !ok {
 		log.Println("can't port")
+		return
 	}
 	envHost, ok := FromFlagOrEnv(*host, ENV_HOST)
 	if !ok {
 		log.Println("can't port")
+		return
 	}
 	addr := net.JoinHostPort(envHost, envPort)
 	log.Println("starting server!")
